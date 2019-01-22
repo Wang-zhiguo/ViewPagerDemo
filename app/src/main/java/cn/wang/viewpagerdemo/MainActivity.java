@@ -49,11 +49,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initViews() {
         viewPager = (ViewPager)findViewById(R.id.viewPager);
         viewPager.setAdapter(new MyPageAdapter());
+        viewPager.setPageMargin(20);
         //添加滑动事件处理，在此主要用来在滑动时切换圆点的状态
         viewPager.addOnPageChangeListener(this);
 //        viewPager.setPageTransformer(true,new RotatePageTransformer());
 //        viewPager.setPageTransformer(true,new DepthPageTransformer());
-//        viewPager.setPageTransformer(true,new ZoomOutPageTransformer());
+        viewPager.setPageTransformer(true,new ZoomOutPageTransformer());
 //        initPoint();
 
 //        Timer timer = new Timer();
@@ -220,12 +221,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void transformPage(View page, float position) {
             System.out.println("-----position:"+position);
-            if(position<-1)
+            if(position<-1) {
                 rotate(page, -MAX_ROTATION);
-            else if(position<=1)
+            }else if(position<=1){
                 rotate(page, MAX_ROTATION*position);
-            else
+            }else {
                 rotate(page, MAX_ROTATION);
+            }
         }
 
         private void rotate(View view, float rotation) {
@@ -238,22 +240,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     class DepthPageTransformer implements ViewPager.PageTransformer {
         private static final float MIN_SCALE = 0.75f;
-
+        @Override
         public void transformPage(View view, float position) {
             int pageWidth = view.getWidth();
 
-            if (position < -1) { // [-Infinity,-1)
+            if (position < -1) {
                 // This page is way off-screen to the left.
                 view.setAlpha(0);
 
-            } else if (position <= 0) { // [-1,0]
+            } else if (position <= 0) {
                 // Use the default slide transition when moving to the left page
                 view.setAlpha(1);
                 view.setTranslationX(0);
                 view.setScaleX(1);
                 view.setScaleY(1);
 
-            } else if (position <= 1) { // (0,1]
+            } else if (position <= 1) {
                 // Fade the page out.
                 view.setAlpha(1 - position);
 
